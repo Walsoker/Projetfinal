@@ -7,8 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-gray-100">
-  
-<nav class="bg-white border-b border-gray-200">
+ <nav class="bg-white border-b border-gray-200">
   <div class="max-w-screen-xl mx-auto flex items-center px-6 py-4">
     <div class="flex-none">
       <a href="index.html"><img src="./img/logo.png" class="h-12 w-auto" alt="Logo BabiBNB"></a>
@@ -17,7 +16,7 @@
       <h1 class="text-xl font-bold text-gray-800 leading-tight">Votre compagnon pour trouver l'hébergement idéal</h1>
       <div class="flex justify-center items-center gap-2 mt-1">
         <span class="text-sm text-gray-600">Nombre d'offres :</span>
-        <span class="bg-[#3b82f6] text-white text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">3</span>
+        <span id="compteur-offres" class="bg-[#3b82f6] text-white text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">3</span>
       </div>
     </div>
     <div class="flex-none">
@@ -35,7 +34,7 @@
         PUBLIER UNE OFFRE 
       </h2>
 
-      <form action="#" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form id="form-publier" action="#" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         <div>
           <label for="type_bien" class="block text-sm font-medium text-gray-600 mb-1">
@@ -114,7 +113,7 @@
     </div>
 
     <!-- LISTE OFFRES -->
-    <div class="space-y-4">
+    <div id="liste-offres" class="space-y-4">
 
       <div class="bg-white rounded-lg shadow p-4">
         <h3 class="font-semibold">recendilis consectetur nulla</h3>
@@ -157,5 +156,6 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+<script src="js/babibnb.js"></script>
 </body>
 </html>

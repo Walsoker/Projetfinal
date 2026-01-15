@@ -17,7 +17,7 @@
       <h1 class="text-xl font-bold text-gray-800 leading-tight">Votre compagnon pour trouver l'hébergement idéal</h1>
       <div class="flex justify-center items-center gap-2 mt-1">
         <span class="text-sm text-gray-600">Nombre d'offres :</span>
-        <span class="bg-[#3b82f6] text-white text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">3</span>
+        <span id="compteur-offres" class="bg-[#3b82f6] text-white text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">3</span>
       </div>
     </div>
     <div class="flex-none">
@@ -25,7 +25,6 @@
     </div>
   </div>
 </nav>
-
 <div>
   <h1 class="font-semibold text-center text-4xl mt-5">
     Listes Des Offres Disponibles
@@ -33,7 +32,7 @@
 </div>
 
 <!-- CONTENEUR DES CARDS -->
-<div class="flex justify-center items-center gap-5 mt-6 mb-16">
+<div id="offres-container" class="flex justify-center items-center gap-5 mt-6 mb-16">
   
   <div class="card bg-white w-80 p-5 rounded-md">
     <div class="content">
@@ -87,6 +86,6 @@
     © 2026 BabiBNB. Tous droits réservés.
   </p>
 </footer>
-
+<script src="js/babibnb.js"></script>
 </body>
 </html>
