@@ -1,178 +1,157 @@
-// PARTIE 1 : Affichage des offres sur l'accueil
-let offres = JSON.parse(localStorage.getItem("offres"));
+// On récupère les offres enregistrées dans le navigateur
+// Si aucune offre n'existe, on crée un tableau vide
+let offres = JSON.parse(localStorage.getItem("offres")) || [];
 
-if (offres === null) {
-  offres = [];
-}
-
-const sauvegarder = function () {
+// Petite fonction pour enregistrer le tableau dans le localStorage
+const sauvegarder = () => {
   localStorage.setItem("offres", JSON.stringify(offres));
 };
 
-// PARTIE 2 : Affichage sur l'accueil (index.html)
+// AFFICHAGE SUR LA PAGE D'ACCUEIL
 const zoneListe = document.querySelector("#offres-container");
 if (zoneListe) {
   const monCompteur = document.querySelector("#compteur-offres");
   if (monCompteur) {
-    // On affiche 3 (tes cartes HTML) + le nombre d'offres ajoutées
+    // On additionne les 3 offres déjà présentes dans le HTML avec les nouvelles
     monCompteur.textContent = 3 + offres.length;
   }
 
-  // ATTENTION : On ne vide plus zoneListe.innerHTML = ""; 
-  // On va ajouter les nouvelles offres à la suite des 3 cartes existantes
-
-  for (let i = 0; i < offres.length; i++) {
-    const o = offres[i];
+  // On boucle sur le tableau pour créer les cartes des nouvelles offres
+  offres.forEach(o => {
     zoneListe.innerHTML += `
-            <div class="card bg-white w-80 p-5 rounded-md shadow">
-                <div class="content">
-                    <h3 class="font-semibold text-xl">${o.titre}</h3>
-                    <p class="text-sm">${o.details}</p>
-                    <div class="img mt-3">
-                        <img src="${o.photo}" width="250" alt="${o.titre}">
-                    </div>
-                    <div class="prix mt-1 font-medium">
-                        prix : ${o.prix.toLocaleString()} CFA
-                    </div>
-                </div>
-            </div>
-        `;
-  }
+      <div class="card bg-white w-80 p-5 rounded-md shadow">
+        <div class="content">
+          <h3 class="font-semibold text-xl">${o.titre}</h3>
+          <p class="text-sm">${o.details}</p>
+          <div class="img mt-3">
+            <img src="${o.photo}" width="250" alt="${o.titre}">
+          </div>
+          <div class="prix mt-1 font-medium">
+            prix : ${o.prix.toLocaleString()} CFA
+          </div>
+        </div>
+      </div>`;
+  });
 }
 
-// PARTIE 3 : Validation et Publication
+//  GESTION DU FORMULAIRE DE PUBLICATION 
 const formPublier = document.querySelector("#form-publier");
-
 if (formPublier) {
-  formPublier.addEventListener("submit", function (evenement) {
-    evenement.preventDefault();
+  formPublier.addEventListener("submit", function (e) {
+    e.preventDefault(); // On empêche la page de se recharger tout de suite
 
+    // On récupère les infos saisies
     const donnees = new FormData(formPublier);
-    const inputTitre = document.querySelector("#titre");
-    const inputPrix = document.querySelector("#prix");
-    const inputDetails = document.querySelector("#details");
+    const titre = document.querySelector("#titre");
+    const prix = document.querySelector("#prix");
+    const details = document.querySelector("#details");
     
-    let estValide = true;
-    const verifierChamp = function (input) {
+    // Test simple : est-ce que les champs obligatoires sont remplis ?
+    let valide = true;
+    [titre, prix, details].forEach(input => {
       if (input.value.trim() === "") {
         input.classList.add("border-red-500", "border-2");
-        estValide = false;
+        valide = false;
       } else {
         input.classList.remove("border-red-500", "border-2");
       }
-    };
+    });
 
-    verifierChamp(inputTitre);
-    verifierChamp(inputPrix);
-    verifierChamp(inputDetails);
-
-    if (estValide === false) {
-      alert("Veuillez remplir les champs indiqués en rouge !");
+    if (!valide) {
+      alert("Attention, il manque des informations !");
       return;
     }
 
-    if (Number(inputPrix.value) <= 0) {
-      inputPrix.classList.add("border-red-500", "border-2");
-      alert("Le prix doit être supérieur à 0 !");
-      return;
-    }
-
+    // On crée l'objet de la nouvelle offre
     const nouvelleOffre = {
-      id: Date.now(),
+      id: Date.now(), // Utilisation du timestamp pour avoir un ID unique on l'a vue en js avancé
       type: donnees.get("type_bien"),
-      titre: inputTitre.value,
-      details: inputDetails.value,
+      titre: titre.value,
+      details: details.value,
       photo: donnees.get("photo"),
-      prix: parseInt(inputPrix.value),
+      prix: parseInt(prix.value),
       commune: donnees.get("commune"),
       emplacement: donnees.get("emplacement"),
     };
 
+    // On l'ajoute au tableau et on sauvegarde
     offres.push(nouvelleOffre);
     sauvegarder();
 
-    alert("✅ Offre publiée !");
+    alert("Super ! L'offre est publiée.");
     window.location.reload(); 
   });
 }
 
-// PARTIE 4 : Modification
+//  GESTION DE LA MODIFICATION 
 const formModifier = document.querySelector("#form-modifier");
 if (formModifier) {
-  const parametres = new URLSearchParams(window.location.search);
-  const idCherche = parseInt(parametres.get("id"));
+  // On regarde quel ID est passé dans l'URL
+  const params = new URLSearchParams(window.location.search);
+  const idCherche = parseInt(params.get("id"));
 
-  let offreAModifier = null;
-  for (let i = 0; i < offres.length; i++) {
-    if (offres[i].id === idCherche) {
-      offreAModifier = offres[i];
-      break;
-    }
+  // On cherche l'offre correspondante dans notre tableau
+  let offre = offres.find(item => item.id === idCherche);
+
+  // Si on la trouve, on pré-remplit le formulaire
+  if (offre) {
+    document.querySelector("#type_bien").value = offre.type;
+    document.querySelector("#titre").value = offre.titre;
+    document.querySelector("#details").value = offre.details;
+    document.querySelector("#photo").value = offre.photo;
+    document.querySelector("#prix").value = offre.prix;
+    document.querySelector("#commune").value = offre.commune;
+    document.querySelector("#emplacement").value = offre.emplacement;
   }
 
-  if (offreAModifier) {
-    document.querySelector("#type_bien").value = offreAModifier.type;
-    document.querySelector("#titre").value = offreAModifier.titre;
-    document.querySelector("#details").value = offreAModifier.details;
-    document.querySelector("#photo").value = offreAModifier.photo;
-    document.querySelector("#prix").value = offreAModifier.prix;
-    document.querySelector("#commune").value = offreAModifier.commune;
-    document.querySelector("#emplacement").value = offreAModifier.emplacement;
-  }
-
+  // Quand on valide les modifications
   formModifier.addEventListener("submit", function (e) {
     e.preventDefault();
-    const donneesModifiees = new FormData(formModifier);
+    const data = new FormData(formModifier);
 
-    for (let i = 0; i < offres.length; i++) {
-      if (offres[i].id === idCherche) {
-        offres[i].type = donneesModifiees.get("type_bien");
-        offres[i].titre = donneesModifiees.get("titre");
-        offres[i].details = donneesModifiees.get("details");
-        offres[i].photo = donneesModifiees.get("photo");
-        offres[i].prix = parseInt(donneesModifiees.get("prix"));
-        offres[i].commune = donneesModifiees.get("commune");
-        offres[i].emplacement = donneesModifiees.get("emplacement");
-        break;
-      }
+    // On met à jour les données dans le tableau
+    const index = offres.findIndex(item => item.id === idCherche);
+    if (index !== -1) {
+      offres[index] = { ...offres[index], 
+        type: data.get("type_bien"),
+        titre: data.get("titre"),
+        details: data.get("details"),
+        photo: data.get("photo"),
+        prix: parseInt(data.get("prix")),
+        commune: data.get("commune"),
+        emplacement: data.get("emplacement")
+      };
+      sauvegarder();
+      alert("Modifications enregistrées !");
+      window.location.href = "index.html";
     }
-
-    sauvegarder();
-    alert("Offre modifiée !");
-    window.location.href = "index.html";
   });
 }
 
-// TA PARTIE : LISTE DE GESTION (PUBLIER.HTML)
+//  LISTE DE GESTION (POUR SUPPRIMER OU MODIFIER) 
 const gestion = document.querySelector("#liste-gestion");
 if (gestion) {
-    const monCompteur = document.querySelector("#compteur-offres");
-    if (monCompteur) {
-        monCompteur.textContent = 3 + offres.length;
-    }
-
+    // on va utilise la boucle foreach sur nos offres pour afficher la petite liste de droite
     offres.forEach((o, index) => {
-        const divOffre = document.createElement("div");
-        divOffre.className = "bg-white rounded-lg shadow p-4"; // Ton design exact
-        divOffre.innerHTML = `
+        const div = document.createElement("div");
+        div.className = "bg-white rounded-lg shadow p-4";
+        div.innerHTML = `
             <h3 class="font-semibold">${o.titre}</h3>
             <p class="text-sm text-gray-500">${o.details.substring(0, 40)}...</p>
             <p class="font-medium mt-2">Prix: ${o.prix.toLocaleString()} FCFA</p>
             <div class="flex gap-2 mt-3">
-                <button type="button" class="btn-supprimer bg-red-500 text-white px-3 py-1 rounded text-sm">Supprimer</button>
+                <button type="button" class="btn-suppr bg-red-500 text-white px-3 py-1 rounded text-sm">Supprimer</button>
                 <a href="modifier.html?id=${o.id}" class="bg-blue-500 text-white px-3 py-1 rounded text-sm text-center">Modifier</a>
-            </div>
-        `;
+            </div>`;
 
-        const btnSuppr = divOffre.querySelector(".btn-supprimer");
-        btnSuppr.addEventListener("click", function() {
-            if (confirm("Supprimer cette offre ?")) {
+        // Action du bouton supprimer
+        div.querySelector(".btn-suppr").onclick = () => {
+            if (confirm("Voulez-vous vraiment retirer cette offre ?")) {
                 offres.splice(index, 1);
                 sauvegarder();
                 window.location.reload();
             }
-        });
-
-        gestion.appendChild(divOffre);
+        };
+        gestion.appendChild(div);
     });
 }
