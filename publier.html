@@ -126,4 +126,147 @@
     <script src="node_modules/to/flowbite/dist/flowbite.min.js"></script>
 </body>
 
+    <title>BabiBNB - Publier une offre</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-screen-xl mx-auto flex items-center px-6 py-4">
+            <div class="flex-none">
+                <a href="index.html"><img src="./img/logo.png" class="h-12 w-auto" alt="Logo BabiBNB"></a>
+            </div>
+            <div class="flex-grow text-center">
+                <h1 class="text-xl font-bold text-gray-800 leading-tight">Votre compagnon pour trouver l'hébergement idéal</h1>
+                <div class="flex justify-center items-center gap-2 mt-1">
+                    <span class="text-sm text-gray-600">Nombre d'offres :</span>
+                    <span id="compteur-offres" class="bg-[#3b82f6] text-white text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">3</span>
+                </div>
+            </div>
+            <div class="flex-none">
+                <a href="index.html" class="bg-[#3b82f6] hover:bg-blue-700 text-white px-5 py-2.5 rounded-md text-sm font-semibold inline-block">Voir l'accueil</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-screen-xl mx-auto px-6 py-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <div class="lg:col-span-2 bg-white rounded-lg shadow p-8 h-fit">
+                <h2 class="text-xl font-bold mb-6 uppercase">Publier une nouvelle offre</h2>
+                
+                <form id="form-publier" action="#" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div>
+                        <label for="type_bien" class="block text-sm font-medium text-gray-600 mb-1">
+                            Type de bien <span class="text-red-500">*</span>
+                        </label>
+                        <select id="type_bien" name="type_bien" class="w-full border rounded-md p-2">
+                            <option>Studio</option>
+                            <option>Appartement</option>
+                            <option>Villa</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="titre" class="block text-sm font-medium text-gray-600 mb-1">
+                            Titre de l'offre <span class="text-red-500">*</span>
+                        </label>
+                        <input id="titre" name="titre" type="text" placeholder="Ex: Studio chic" class="w-full border rounded-md p-2">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="details" class="block text-sm font-medium text-gray-600 mb-1">
+                            Détails du bien <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="details" name="details" rows="4" placeholder="Description du bien..." class="w-full border rounded-md p-2"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="photo" class="block text-sm font-medium text-gray-600 mb-1">
+                            Lien vers la photo <span class="text-red-500">*</span>
+                        </label>
+                        <input id="photo" name="photo" type="url" placeholder="https://..." class="w-full border rounded-md p-2">
+                    </div>
+
+                    <div>
+                        <label for="prix" class="block text-sm font-medium text-gray-600 mb-1">
+                            Prix par mois (FCFA) <span class="text-red-500">*</span>
+                        </label>
+                        <input id="prix" name="prix" type="number" placeholder="Ex: 150000" class="w-full border rounded-md p-2">
+                    </div>
+
+                    <div>
+                        <label for="commune" class="block text-sm font-medium text-gray-600 mb-1">
+                            Commune <span class="text-red-500">*</span>
+                        </label>
+                        <select id="commune" name="commune" class="w-full border rounded-md p-2">
+                            <option value="Cocody">Cocody</option>
+                            <option value="Yopougon">Yopougon</option>
+                            <option value="Marcory">Marcory</option>
+                            <option value="Plateau">Plateau</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="emplacement" class="block text-sm font-medium text-gray-600 mb-1">
+                            Emplacement <span class="text-red-500">*</span>
+                        </label>
+                        <input id="emplacement" name="emplacement" type="text" placeholder="Ex: Angré 8e tranche" class="w-full border rounded-md p-2">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-md font-bold hover:bg-blue-700 transition cursor-pointer">
+                             PUBLIER L'OFFRE
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+           <div id="liste-gestion" class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow p-4">
+        <h3 class="font-semibold">recendilis consectetur nulla</h3>
+        <p class="text-sm text-gray-500">Nemo nesciunt rerum magni…</p>
+        <p class="font-medium mt-2">Prix: 300 000 FCFA</p>
+        <div class="flex gap-2 mt-3">
+          <button type="button" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Supprimer</button>
+          <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Modifier</button>
+        </div>
+      </div>
+
+                <div class="bg-white rounded-lg shadow p-4">
+        <h3 class="font-semibold">Studio Mbadon</h3>
+        <p class="text-sm text-gray-500">Bien situé…</p>
+        <p class="font-medium mt-2">Prix: 150 000 FCFA</p>
+        <div class="flex gap-2 mt-3">
+          <button type="button" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Supprimer</button>
+          <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Modifier</button>
+        </div>
+      </div>
+
+                <div class="bg-white rounded-lg shadow p-4">
+        <h3 class="font-semibold">3 pièces Angré 8e tranche</h3>
+        <p class="text-sm text-gray-500">Bien situé et avec beaucoup d’avantages…</p>
+        <p class="font-medium mt-2">Prix: 800 000 FCFA</p>
+        <div class="flex gap-2 mt-3">
+          <button type="button" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Supprimer</button>
+          <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Modifier</button>
+        </div>
+      </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white py-4 border-t border-gray-200 mt-auto">
+        <p class="text-center text-[12px] text-gray-600">
+            © 2026 BabiBNB. Tous droits réservés.
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="js/babibnb.js"></script>
+</body>
 </html>
