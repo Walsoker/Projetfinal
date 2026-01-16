@@ -1,5 +1,4 @@
 // PARTIE 1 : Affichage des offres sur l'accueil
-// On récupère le tableau des offres
 let offres = JSON.parse(localStorage.getItem("offres"));
 
 if (offres === null) {
@@ -10,16 +9,17 @@ const sauvegarder = function () {
   localStorage.setItem("offres", JSON.stringify(offres));
 };
 
-// PARTIE 2 : Affichage des offres dans la page publier.html et index.html
-
+// PARTIE 2 : Affichage sur l'accueil (index.html)
 const zoneListe = document.querySelector("#offres-container");
 if (zoneListe) {
   const monCompteur = document.querySelector("#compteur-offres");
   if (monCompteur) {
-    monCompteur.textContent = offres.length;
+    // On affiche 3 (tes cartes HTML) + le nombre d'offres ajoutées
+    monCompteur.textContent = 3 + offres.length;
   }
 
-  zoneListe.innerHTML = "";
+  // ATTENTION : On ne vide plus zoneListe.innerHTML = ""; 
+  // On va ajouter les nouvelles offres à la suite des 3 cartes existantes
 
   for (let i = 0; i < offres.length; i++) {
     const o = offres[i];
@@ -39,7 +39,8 @@ if (zoneListe) {
         `;
   }
 }
-//PARTIE 3 : Validation des champs obligatoires
+
+// PARTIE 3 : Validation et Publication
 const formPublier = document.querySelector("#form-publier");
 
 if (formPublier) {
@@ -47,13 +48,11 @@ if (formPublier) {
     evenement.preventDefault();
 
     const donnees = new FormData(formPublier);
-
-    //On récupère les éléments HTML pour pouvoir changer leur style
     const inputTitre = document.querySelector("#titre");
     const inputPrix = document.querySelector("#prix");
     const inputDetails = document.querySelector("#details");
+    
     let estValide = true;
-    // Fonction de vérification d'un champ
     const verifierChamp = function (input) {
       if (input.value.trim() === "") {
         input.classList.add("border-red-500", "border-2");
@@ -63,23 +62,21 @@ if (formPublier) {
       }
     };
 
-    // On lance la vérification sur les champs obligatoires
     verifierChamp(inputTitre);
     verifierChamp(inputPrix);
     verifierChamp(inputDetails);
 
-    // Si un champ est vide, on arrête
     if (estValide === false) {
       alert("Veuillez remplir les champs indiqués en rouge !");
       return;
     }
 
-    // Validation du prix (doit être > 0)
     if (Number(inputPrix.value) <= 0) {
       inputPrix.classList.add("border-red-500", "border-2");
       alert("Le prix doit être supérieur à 0 !");
       return;
     }
+
     const nouvelleOffre = {
       id: Date.now(),
       type: donnees.get("type_bien"),
@@ -95,13 +92,12 @@ if (formPublier) {
     sauvegarder();
 
     alert("✅ Offre publiée !");
-    window.location.href = "index.html";
+    window.location.reload(); 
   });
 }
-//PARTIE 4 : Modification des offres existantes
 
+// PARTIE 4 : Modification
 const formModifier = document.querySelector("#form-modifier");
-
 if (formModifier) {
   const parametres = new URLSearchParams(window.location.search);
   const idCherche = parseInt(parametres.get("id"));
@@ -145,4 +141,38 @@ if (formModifier) {
     alert("Offre modifiée !");
     window.location.href = "index.html";
   });
+}
+
+// TA PARTIE : LISTE DE GESTION (PUBLIER.HTML)
+const gestion = document.querySelector("#liste-gestion");
+if (gestion) {
+    const monCompteur = document.querySelector("#compteur-offres");
+    if (monCompteur) {
+        monCompteur.textContent = 3 + offres.length;
+    }
+
+    offres.forEach((o, index) => {
+        const divOffre = document.createElement("div");
+        divOffre.className = "bg-white rounded-lg shadow p-4"; // Ton design exact
+        divOffre.innerHTML = `
+            <h3 class="font-semibold">${o.titre}</h3>
+            <p class="text-sm text-gray-500">${o.details.substring(0, 40)}...</p>
+            <p class="font-medium mt-2">Prix: ${o.prix.toLocaleString()} FCFA</p>
+            <div class="flex gap-2 mt-3">
+                <button type="button" class="btn-supprimer bg-red-500 text-white px-3 py-1 rounded text-sm">Supprimer</button>
+                <a href="modifier.html?id=${o.id}" class="bg-blue-500 text-white px-3 py-1 rounded text-sm text-center">Modifier</a>
+            </div>
+        `;
+
+        const btnSuppr = divOffre.querySelector(".btn-supprimer");
+        btnSuppr.addEventListener("click", function() {
+            if (confirm("Supprimer cette offre ?")) {
+                offres.splice(index, 1);
+                sauvegarder();
+                window.location.reload();
+            }
+        });
+
+        gestion.appendChild(divOffre);
+    });
 }
