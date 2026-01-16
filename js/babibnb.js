@@ -1,6 +1,6 @@
 const gestion = document.querySelector("#liste-gestion");
 
-if (maZoneGestion) {
+if (gestion) {
     // ÉTAPE 5 : AFFICHAGE DES OFFRES 
     // On vide la zone avant de commencer
     gestion.innerHTML = "";
